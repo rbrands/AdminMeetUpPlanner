@@ -1,0 +1,27 @@
+﻿@page "/LoginProviders"
+
+@{
+    var providers = new Dictionary<string, string>
+{
+        { "aad", "Microsoft" },
+        { "google", "Google" },
+        { "facebook", "Facebook" },
+        { "github", "GitHub" },
+        { "twitter", "Twitter" }
+    };
+}
+
+<h1>Anmelden</h1>
+
+<div class="container">
+    @foreach (var provider in providers)
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-9 col-lg-6">
+                <a class="btn btn-block btn-lg btn-social btn-@(provider.Key.Equals("aad") ? "microsoft" : provider.Key)" href="/.auth/login/@provider.Key">
+                    <span class="fa fa-@(provider.Key.Equals("aad") ? "windows" : provider.Key)"></span> Anmelden mit @provider.Value
+                </a>
+            </div>
+        </div>
+    }
+</div>

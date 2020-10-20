@@ -1,0 +1,70 @@
+﻿@page "/claims"
+@attribute [Authorize]
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject IAuthorizationService AuthorizationService
+@using BlazorApp.Client.Utils
+@inject BackendApiRepository Api
+
+
+<h3>ClaimsPrincipal Data</h3>
+
+<button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+
+<p>@_authMessage</p>
+
+@if (_claims.Count() > 0)
+{
+    <ul>
+        @foreach (var claim in _claims)
+        {
+            <li>@claim.Issuer - @claim.Type: @claim.Value</li>
+        }
+    </ul>
+}
+
+<p>@_surnameMessage</p>
+<p>User id: @_userId</p>
+
+@if (null != _clientPrincipal)
+{
+    <h3>ClientPrincipal from server</h3>
+    <p>IdentityProvider: @_clientPrincipal.IdentityProvider</p>
+    <p>UserId: @_clientPrincipal.UserId</p>
+    <p>UserDetails: @_clientPrincipal.UserDetails</p>
+    <p>Roles: @String.Join(", ", _clientPrincipal.UserRoles)</p>
+}
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private string _authMessage;
+    private string _surnameMessage;
+    private string _userId;
+
+    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+    private BlazorApp.Shared.ClientPrincipal _clientPrincipal = null;
+
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _authMessage = $"{user.Identity.Name} is authenticated with AuthenticationType {user.Identity.AuthenticationType}.";
+            _claims = user.Claims;
+            _surnameMessage =
+                $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Name)?.Value}";
+            _userId = $"{user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value}";
+
+            _clientPrincipal = await Api.GetUserDetails();
+        }
+
+    }
+
+
+}
