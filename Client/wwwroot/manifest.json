@@ -1,7 +1,8 @@
 {
   "name": "Admin MeetUpPlanner",
   "short_name": "Admin MeetUpPlanner",
-  "start_url": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#03173d",
