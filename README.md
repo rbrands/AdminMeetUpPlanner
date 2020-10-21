@@ -34,6 +34,8 @@ To get the app enabled as PWA follow these steps:
 - Add script to register service-worker.js to index.html
 - Add ServicesWorkerAssetsManifest elemet to project file
 - Add ItemGroup/ServiceWorker element ot project file
+- Change service-worker-published.js to exclude routes.json from cache
+- Change service-worker-published.js to exclude paths ".auth/" from cache.
 
 ## Calling backend services
 
