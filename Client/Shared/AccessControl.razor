@@ -5,7 +5,7 @@
 
 <AuthorizeView>
     <Authorized>
-        @context.User.Identity.Name!
+        @context.User.Identity.Name
         <a href="/.auth/logout">Abmelden</a>
     </Authorized>
     <NotAuthorized>
