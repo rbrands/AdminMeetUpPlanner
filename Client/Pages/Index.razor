@@ -2,6 +2,29 @@
 
 <h1>Administration für den MeetUpPlanner</h1>
 
-Welcome to your new app.
+<p>
+    Die Administrator-WebApp zum MeetUpPlanner.
+</p>
+
+<AuthorizeView>
+    <Authorized>
+        <p>
+            @if (context.User.IsInRole("admin"))
+            {
+                <text>Du bist Administrator und damit berechtigt für alle Funktionen.</text>
+            }
+            else
+            {
+                <text>Du bist zwar angmeldet aber nicht als Administrator registriert.</text>
+            }
+        </p>
+    </Authorized>
+    <NotAuthorized>
+        <p>
+            Um diese Anwendung zu nutzen, muss man angemeldet sein und als Administrator berechtigt sein.
+            <a href="/LoginProviders">Anmelden</a>
+        </p>
+    </NotAuthorized>
+</AuthorizeView>
 
 
