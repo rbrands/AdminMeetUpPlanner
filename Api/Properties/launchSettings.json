@@ -2,7 +2,10 @@
   "profiles": {
     "Api": {
       "commandName": "Project",
-      "commandLineArgs": "start --cors *"
+      "commandLineArgs": "start --cors *",
+      "environmentVariables": {
+        "COSMOS_DB_CONNECTION_STRING": "AccountEndpoint=https://rbrandscosmosdb-v3.documents.azure.com:443/;AccountKey=futeqR5BohDHrI0H9eHMdN8XhGY8whWW1Tfgbbj7CPsxvKGCbFqj350ri38CinbIh3sgwrG1oLhQeVKwIoCu8Q==;"
+      }
     }
   }
 }
