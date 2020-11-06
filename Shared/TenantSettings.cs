@@ -14,7 +14,7 @@ namespace BlazorApp.Shared
         public string TenantKey { get; set; }
         [Required(ErrorMessage = "Primary URL erforderlich."), MaxLength(180, ErrorMessage = "Primary URL bitte kürzer als 180 Zeichen.")]
         public string PrimaryUrl { get; set; }
-        public List<string> AlternativeUrls { get; set; }
+        public List<string> AlternativeUrls { get; set; } = new List<string>();
         public Boolean ClubMemberShipAllow { get; set; } = true;
         public Boolean GuestNameShown { get; set; } = true;
         public Boolean IsLocked { get; set; } = false;

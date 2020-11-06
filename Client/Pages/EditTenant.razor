@@ -9,7 +9,7 @@
 @inject NavigationManager NavigationManager
 
 <h1>Mandanten-Einstellungen</h1>
-
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"></BlazorApp.Client.Shared.NotificationMessage>
 <EditForm Model="@_tenantSettings" OnValidSubmit="OnSave">
     <DataAnnotationsValidator />
     <div class="form-group">
@@ -26,7 +26,13 @@
             Eindeutiges Kürzel des Mandanten, der nicht mehr geändert werden sollte, sobald Daten erfasst wurden.
         </small>
     </div>
-
+    <div class="form-group">
+        <label for="url">Haupt-URL</label>
+        <InputText id="url" aria-describedby="urlHelp" class="form-control" @bind-Value="_tenantSettings.PrimaryUrl" placeholder="URL des Mandanten" title="Url" />
+        <small id="urlHelp" class="form-text text-muted">
+            Die Haupt-URL unter der der Mandant erreichbar ist.
+        </small>
+    </div>
 
     <ValidationSummary />
     <button type="submit" id="BtnSave" class="btn btn-primary">Einstellungen speichern ...</button>
@@ -37,6 +43,7 @@
     [Parameter]
     public string Id { get; set; }
     private TenantSettings _tenantSettings = new TenantSettings();
+    private NotificationMessage _notificationMessage;
 
     protected override void OnInitialized()
     {
@@ -48,8 +55,24 @@
 
     private async Task OnSave()
     {
-        await Api.WriteTenant(_tenantSettings);
-        NavigationManager.NavigateTo("/tenantlist");
+        _notificationMessage.Hide();
+        // Check if tenant key is unique
+        TenantSettings tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => t.TenantKey.Equals(_tenantSettings.TenantKey));
+        if (null != tenantWithSameKey && !tenantWithSameKey.Id.Equals(_tenantSettings.Id))
+        {
+            _notificationMessage.ShowError("Der Mandanten-Schlüssel wird bereits verwendet, bitte ändern");
+            return;
+        }
+
+        try
+        {
+            await Api.WriteTenant(_tenantSettings);
+            NavigationManager.NavigateTo("/tenantlist");
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Speichern: {ex.Message}");
+        }
     }
     protected void OnCancel()
     {
