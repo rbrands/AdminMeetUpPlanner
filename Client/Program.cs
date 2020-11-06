@@ -5,6 +5,7 @@ using BlazorApp.Client.Utils;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using AzureStaticWebApps.Blazor.Authentication;
+using Blazored.LocalStorage;
 
 namespace BlazorApp.Client
 {
@@ -18,6 +19,8 @@ namespace BlazorApp.Client
             var baseAddress = builder.Configuration["BaseAddress"] ?? builder.HostEnvironment.BaseAddress;
             builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(baseAddress) });
             builder.Services.AddScoped<BackendApiRepository>();
+            builder.Services.AddSingleton<AppState>();
+            builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddStaticWebAppsAuthentication();
 
             await builder.Build().RunAsync();

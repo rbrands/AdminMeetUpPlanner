@@ -17,5 +17,8 @@ namespace BlazorApp.Shared
         public List<string> AlternativeUrls { get; set; }
         public Boolean ClubMemberShipAllow { get; set; } = true;
         public Boolean GuestNameShown { get; set; } = true;
+        public Boolean IsLocked { get; set; } = false;
+        public string LockMessage { get; set; }
+        public Boolean TracksEnabled { get; set; } = true;
     }
 }

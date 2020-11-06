@@ -5,7 +5,8 @@
     "userDetails": "rbrands",
     "userRoles": [
       "anonymous",
-      "authenticated"
+      "authenticated",
+      "admin"
     ]
   }
 }

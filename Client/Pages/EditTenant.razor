@@ -1,0 +1,59 @@
+﻿@page "/edittenant"
+@page "/edittenant/{Id}"
+@attribute [Authorize(Roles = "admin")]
+@using BlazorApp.Shared
+@using BlazorApp.Client.Utils
+@using Blazored.TextEditor
+@inject AppState AppStateStore
+@inject BackendApiRepository Api
+@inject NavigationManager NavigationManager
+
+<h1>Mandanten-Einstellungen</h1>
+
+<EditForm Model="@_tenantSettings" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="title">Bezeichnung</label>
+        <InputText id="title" aria-describedby="titleHelp" class="form-control" @bind-Value="_tenantSettings.TenantName" placeholder="Bezeichnung des Mandanten" title="Bezeichnung" />
+        <small id="titleHelp" class="form-text text-muted">
+            Bezeichnung des Mandanten.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="key">Eindeutiges Kürzel</label>
+        <InputText id="title" aria-describedby="keyHelp" class="form-control" @bind-Value="_tenantSettings.TenantKey" placeholder="Kürzel des Mandanten" title="Kürzel" />
+        <small id="titleHelp" class="form-text text-muted">
+            Eindeutiges Kürzel des Mandanten, der nicht mehr geändert werden sollte, sobald Daten erfasst wurden.
+        </small>
+    </div>
+
+
+    <ValidationSummary />
+    <button type="submit" id="BtnSave" class="btn btn-primary">Einstellungen speichern ...</button>
+    <button type="reset" id="BtnCancel" class="btn btn-secondary" @onclick="@(() => OnCancel())">Zurück ohne Speichern</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private TenantSettings _tenantSettings = new TenantSettings();
+
+    protected override void OnInitialized()
+    {
+        if (!String.IsNullOrEmpty(Id))
+        {
+            AppStateStore.Tenants.FirstOrDefault(t => t.Id.Equals(Id));
+        }
+    }
+
+    private async Task OnSave()
+    {
+        await Api.WriteTenant(_tenantSettings);
+        NavigationManager.NavigateTo("/tenantlist");
+    }
+    protected void OnCancel()
+    {
+        NavigationManager.NavigateTo("/tenantlist");
+    }
+
+}

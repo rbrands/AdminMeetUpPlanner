@@ -1,6 +1,14 @@
 {
   "routes": [
     {
+      "route": "/api/GetUserDetails",
+      "allowedRoles": [ "authenticated" ]
+    },
+    {
+      "route": "/api/*",
+      "allowedRoles": [ "admin" ]
+    },
+    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200

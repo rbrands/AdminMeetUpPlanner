@@ -1,0 +1,18 @@
+﻿@page "/tenantlist"
+@attribute [Authorize(Roles = "admin")]
+@using BlazorApp.Shared
+@using BlazorApp.Client.Utils
+@inject AppState AppStateStore
+@inject BackendApiRepository Api
+
+
+<h3>TenantList</h3>
+
+@code {
+    private IEnumerable<TenantSettings> _tenants = new List<TenantSettings>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tenants = await Api.GetTenants();
+    }
+}
