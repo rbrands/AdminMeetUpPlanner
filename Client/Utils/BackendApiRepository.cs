@@ -32,9 +32,13 @@ namespace BlazorApp.Client.Utils
         }
         public async Task<TenantSettings> WriteTenant(TenantSettings tenant)
         {
-            HttpResponseMessage response = await _http.PostAsJsonAsync<TenantSettings>($"/api/GetTenantSettings", tenant);
+            HttpResponseMessage response = await _http.PostAsJsonAsync<TenantSettings>($"/api/WriteTenantSettings", tenant);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<TenantSettings>(); 
+        }
+        public async Task DeleteTenant(TenantSettings tenant)
+        {
+            await _http.PostAsJsonAsync<TenantSettings>($"/api/DeleteTenantSettings", tenant);
         }
 
     }

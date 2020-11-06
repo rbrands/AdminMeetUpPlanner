@@ -4,15 +4,82 @@
 @using BlazorApp.Client.Utils
 @inject AppState AppStateStore
 @inject BackendApiRepository Api
+@inject NavigationManager NavigationManager
 
 
-<h3>TenantList</h3>
+
+<h1>Mandanten</h1>
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"></BlazorApp.Client.Shared.NotificationMessage>
+
+<div class="table-responsive">
+    <table class="table table-sm table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Aktion</th>
+                <th scope="col">Name</th>
+                <th scope="col">Kürzel</th>
+                <th scope="col">URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TenantSettings tenant in _tenants)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
+                        <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
+                    </td>
+                    <td>@tenant.TenantName</td>
+                    <td>@tenant.TenantKey</td>
+                    <td>@tenant.PrimaryUrl</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
     private IEnumerable<TenantSettings> _tenants = new List<TenantSettings>();
+    private NotificationMessage _notificationMessage;
+
 
     protected override async Task OnInitializedAsync()
     {
-        _tenants = await Api.GetTenants();
+        try
+        {
+            AppStateStore.Tenants = _tenants = await Api.GetTenants();
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Daten können nicht gelesen werden: {ex.Message}");
+        }
     }
+
+    protected void EditTenant(string Id)
+    {
+        NavigationManager.NavigateTo($"/edittenant/{Id}");
+    }
+
+    protected async Task DeleteTenant(TenantSettings tenantSettings)
+    {
+        ModalResult result = await Confirm.ShowDialog(Modal, "Löschen?", "Sollen die Mandanten-Einstellung wirklich gelöscht werden? Danach kann der Mandant nicht mehr verwendet werden!");
+        if (result.Cancelled || !(result.Data is bool accepted) || !accepted)
+        {
+            return;
+        }
+        try
+        {
+            await Api.DeleteTenant(tenantSettings);
+            AppStateStore.Tenants = _tenants = await Api.GetTenants();
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Löschen: {ex.Message}");
+        }
+    }
+
+
 }

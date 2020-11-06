@@ -99,6 +99,21 @@ namespace BlazorApp.Api.Repositories
             }
             return results;
         }
+        /// <summary>
+        ///  Gets the first item matching the given condition, null if not found.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public T GetFirstItemOrDefault(Expression<Func<T, bool>> predicate)
+        {
+            Container container = _cosmosClient.GetDatabase(_cosmosDbDatabase).GetContainer(_cosmosDbContainer);
+            PartitionKey partitionKey = new PartitionKey(typeof(T).Name);
+
+            T firstItem = container.GetItemLinqQueryable<T>(true, null, new QueryRequestOptions { MaxItemCount = 1, PartitionKey = partitionKey })
+                                             .Where(d => d.Type == typeof(T).Name)
+                                             .Where<T>(predicate).FirstOrDefault();
+            return firstItem;
+        }
         public async Task<IEnumerable<T>> GetItems()
         {
             Container container = _cosmosClient.GetDatabase(_cosmosDbDatabase).GetContainer(_cosmosDbContainer);

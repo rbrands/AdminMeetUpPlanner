@@ -9,7 +9,7 @@
 @inject NavigationManager NavigationManager
 
 <h1>Mandanten-Einstellungen</h1>
-<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"></BlazorApp.Client.Shared.NotificationMessage>
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"/>
 <EditForm Model="@_tenantSettings" OnValidSubmit="OnSave">
     <DataAnnotationsValidator />
     <div class="form-group">
@@ -40,27 +40,58 @@
 </EditForm>
 
 @code {
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
     [Parameter]
     public string Id { get; set; }
+
+
     private TenantSettings _tenantSettings = new TenantSettings();
     private NotificationMessage _notificationMessage;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        if (!AppStateStore.TenantsAlreadyRead)
+        {
+            try
+            {
+                AppStateStore.Tenants = await Api.GetTenants();
+                AppStateStore.TenantsAlreadyRead = true;
+            }
+            catch (Exception ex)
+            {
+                _notificationMessage.ShowError($"Fehler beim Lesen der Daten: {ex.Message}");
+            }
+        }
         if (!String.IsNullOrEmpty(Id))
         {
-            AppStateStore.Tenants.FirstOrDefault(t => t.Id.Equals(Id));
+            _tenantSettings = AppStateStore.Tenants.FirstOrDefault(t => t.Id.Equals(Id));
         }
     }
 
     private async Task OnSave()
     {
         _notificationMessage.Hide();
+
         // Check if tenant key is unique
-        TenantSettings tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => t.TenantKey.Equals(_tenantSettings.TenantKey));
+        TenantSettings tenantWithSameKey;
+        if (null == _tenantSettings.TenantKey)
+        {
+            tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => (t.TenantKey ?? String.Empty) == String.Empty);
+        }
+        else
+        {
+            tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => t.TenantKey != null && t.TenantKey.Equals(_tenantSettings.TenantKey));
+        }
         if (null != tenantWithSameKey && !tenantWithSameKey.Id.Equals(_tenantSettings.Id))
         {
             _notificationMessage.ShowError("Der Mandanten-Schlüssel wird bereits verwendet, bitte ändern");
+            return;
+        }
+
+        ModalResult result = await Confirm.ShowDialog(Modal, "Speichern?", "Sollen die Mandanteneinstellung wirklich gespeichert werden?");
+        if (result.Cancelled || !(result.Data is bool accepted) || !accepted)
+        {
             return;
         }
 
