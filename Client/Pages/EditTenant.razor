@@ -33,6 +33,64 @@
             Die Haupt-URL unter der der Mandant erreichbar ist.
         </small>
     </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="clubmembership" aria-describedby="clubmembershipHelp" class="form-check-input" @bind-Value="_tenantSettings.ClubMemberShipAllow"></InputCheckbox>
+            <label for="clubmembership" class="form-check-label">Vereinsmitgliedschaft möglich?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen die Benutzer statt einer Kontaktinformation "Vereinsmitglied?" ankreuzen können?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="guestNameShown" aria-describedby="guestNameShownHelp" class="form-check-input" @bind-Value="_tenantSettings.GuestNameShown"></InputCheckbox>
+            <label for="guestNameShown" class="form-check-label">Namen der Gäste anzeigen?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen die Namen der Gäste wie die der anderen Teilnehmern angezeigt werden?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="tracksAllowed" aria-describedby="tracksAllowedHelp" class="form-check-input" @bind-Value="_tenantSettings.TracksEnabled"></InputCheckbox>
+            <label for="tracksAllowed" class="form-check-label">Streckenverwaltung einschalten?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen Optionen zur Verwaltung von Strecken freigeschaltet werden?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="appLocked" class="form-check-input" @bind-Value="_tenantSettings.IsLocked" />
+            <label for="appLocked" class="form-checklabel">
+                Soll der Zugang zum MeetUpPlanner mit der Meldung unten gesperrt werden?
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="lockedMessage">Meldung falls MeetUpPlanner gesperrt</label>
+        <BlazoredTextEditor @ref="_htmlLockedMessage" Placeholder="Meldung als Hinweis an die Nutzer, falls der MeetUpPlanner gesperrt wird.">
+            <ToolbarContent>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>
+                @if (null != _tenantSettings.LockMessage)
+                {@((MarkupString)_tenantSettings.LockMessage)}
+            </EditorContent>
+
+        </BlazoredTextEditor>
+    </div>
+
 
     <ValidationSummary />
     <button type="submit" id="BtnSave" class="btn btn-primary">Einstellungen speichern ...</button>
@@ -48,6 +106,8 @@
 
     private TenantSettings _tenantSettings = new TenantSettings();
     private NotificationMessage _notificationMessage;
+    private BlazoredTextEditor _htmlLockedMessage;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,19 +133,11 @@
     {
         _notificationMessage.Hide();
 
-        // Check if tenant key is unique
-        TenantSettings tenantWithSameKey;
-        if (null == _tenantSettings.TenantKey)
+        // Check if tenant url is unique
+        TenantSettings tenantWithSameUrl = AppStateStore.Tenants.FirstOrDefault(t => t.PrimaryUrl.Equals(_tenantSettings.PrimaryUrl));
+        if (null != tenantWithSameUrl && !tenantWithSameUrl.Id.Equals(_tenantSettings.Id))
         {
-            tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => (t.TenantKey ?? String.Empty) == String.Empty);
-        }
-        else
-        {
-            tenantWithSameKey = AppStateStore.Tenants.FirstOrDefault(t => t.TenantKey != null && t.TenantKey.Equals(_tenantSettings.TenantKey));
-        }
-        if (null != tenantWithSameKey && !tenantWithSameKey.Id.Equals(_tenantSettings.Id))
-        {
-            _notificationMessage.ShowError("Der Mandanten-Schlüssel wird bereits verwendet, bitte ändern");
+            _notificationMessage.ShowError("Die Mandanten-Url wird bereits verwendet, bitte ändern");
             return;
         }
 
@@ -94,7 +146,7 @@
         {
             return;
         }
-
+        _tenantSettings.LockMessage = StripEmptyHtml(await _htmlLockedMessage.GetHTML());
         try
         {
             await Api.WriteTenant(_tenantSettings);
@@ -109,5 +161,10 @@
     {
         NavigationManager.NavigateTo("/tenantlist");
     }
+    private string StripEmptyHtml(string htmlContent)
+    {
+        return htmlContent.Equals("<p><br></p>") ? null : htmlContent;
+    }
+
 
 }

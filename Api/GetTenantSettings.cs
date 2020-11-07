@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using BlazorApp.Shared;
 using BlazorApp.Api.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BlazorApp.Api
 {
@@ -29,7 +30,7 @@ namespace BlazorApp.Api
         {
             _logger.LogInformation("GetTenantSettings");
 
-            IEnumerable<TenantSettings> tenantSettings = await _cosmosRepository.GetItems(); 
+            IEnumerable<TenantSettings> tenantSettings = (await _cosmosRepository.GetItems()).OrderBy(t => t.TenantKey); 
 
             return new OkObjectResult(tenantSettings);
         }

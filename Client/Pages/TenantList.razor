@@ -51,6 +51,7 @@
         try
         {
             AppStateStore.Tenants = _tenants = await Api.GetTenants();
+            AppStateStore.TenantsAlreadyRead = true;
         }
         catch (Exception ex)
         {
@@ -65,7 +66,7 @@
 
     protected async Task DeleteTenant(TenantSettings tenantSettings)
     {
-        ModalResult result = await Confirm.ShowDialog(Modal, "Löschen?", "Sollen die Mandanten-Einstellung wirklich gelöscht werden? Danach kann der Mandant nicht mehr verwendet werden!");
+        ModalResult result = await Confirm.ShowDialog(Modal, $"{tenantSettings.TenantName} löschen?", "Sollen die Mandanten-Einstellung wirklich gelöscht werden? Danach kann der Mandant nicht mehr verwendet werden!");
         if (result.Cancelled || !(result.Data is bool accepted) || !accepted)
         {
             return;
