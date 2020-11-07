@@ -1,34 +1,36 @@
 ﻿@page "/"
+@using BlazorApp.Client.Utils;
 
-<h1>Administration für den MeetUpPlanner</h1>
+<div class="jumbotron">
+    <h1>Administration für den MeetUpPlanner</h1>
 
-<p>
-    Die Administrator-WebApp zum MeetUpPlanner.
-</p>
-
-<AuthorizeView>
-    <Authorized>
-        <p>
-            @if (context.User.IsInRole("admin"))
-            {
-                <text>Du bist Administrator und damit berechtigt für alle Funktionen.</text>
-            }
-            else
-            {
-                <text>Du bist zwar angmeldet aber nicht als Administrator registriert.</text>
-            }
-        </p>
-    </Authorized>
-    <NotAuthorized>
-        <p>
-            Um diese Anwendung zu nutzen, muss man angemeldet sein und als Administrator berechtigt sein.
-            <a href="/LoginProviders">Anmelden</a>
-        </p>
-    </NotAuthorized>
-</AuthorizeView>
-<p>
-    Version: 2020-10-22
-</p>
-
+    <p class="lead">Die Administrator-WebApp zum MeetUpPlanner.</p>
+    <hr class="my-4" />
+    <AuthorizeView>
+        <Authorized>
+            <p>
+                @if (context.User.IsInRole(Constants.RoleAdmin) || context.User.IsInRole(Constants.RoleTenantAdmin))
+                {
+                    <p>
+                        Du bist Administrator und damit berechtigt für Administrationsfunktionen, wähle eine der Optionen aus dem Menü.
+                    </p>
+                    <a href="/TenantList">Zur Mandantenliste ...</a>
+                }
+                else
+                {
+                    <p>
+                        Du bist zwar angmeldet aber hast noch keine Berechtigungen für die Administration.
+                    </p>
+                }
+            </p>
+        </Authorized>
+        <NotAuthorized>
+            <p>
+                Um diese Anwendung zu nutzen, muss man angemeldet sein und als entsprechend berechtigt sein.
+                <a href="/LoginProviders">Anmelden</a>
+            </p>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
 
 

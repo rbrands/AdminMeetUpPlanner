@@ -19,13 +19,13 @@ namespace BlazorApp.Api
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("GetUserDetails called");
             ClientPrincipal user = new ClientPrincipal()
             {
                 IdentityProvider = "devtest",
                 UserId = "test123",
                 UserDetails = "rbrands",
-                UserRoles = new String[] { "anonymous", "authenticated" }
+                UserRoles = new String[] { "anonymous", "authenticated", "admin" }
             };
 
             string header = req.Headers["x-ms-client-principal"];

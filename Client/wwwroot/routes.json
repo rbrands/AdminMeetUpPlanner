@@ -1,6 +1,18 @@
 {
   "routes": [
     {
+      "route": "/api/GetUserDetails",
+      "allowedRoles": [ "authenticated" ]
+    },
+    {
+      "route": "/api/GetTenantSettings",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/*",
+      "allowedRoles": [ "admin" ]
+    },
+    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200

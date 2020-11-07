@@ -1,0 +1,184 @@
+﻿@page "/edittenant"
+@page "/edittenant/{Id}"
+@attribute [Authorize(Roles = "admin")]
+@using BlazorApp.Shared
+@using BlazorApp.Client.Utils
+@using Blazored.TextEditor
+@inject AppState AppStateStore
+@inject BackendApiRepository Api
+@inject NavigationManager NavigationManager
+
+<h1>Mandanten-Einstellungen</h1>
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"/>
+<EditForm Model="@_tenantSettings" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="title">Bezeichnung</label>
+        <InputText id="title" aria-describedby="titleHelp" class="form-control" @bind-Value="_tenantSettings.TenantName" placeholder="Bezeichnung des Mandanten" title="Bezeichnung" />
+        <small id="titleHelp" class="form-text text-muted">
+            Bezeichnung des Mandanten.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="key">Eindeutiges Kürzel</label>
+        <InputText id="title" aria-describedby="keyHelp" class="form-control" @bind-Value="_tenantSettings.TenantKey" placeholder="Kürzel des Mandanten" title="Kürzel" />
+        <small id="titleHelp" class="form-text text-muted">
+            Eindeutiges Kürzel des Mandanten, der nicht mehr geändert werden sollte, sobald Daten erfasst wurden.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="adminRole">Admin-Rolle</label>
+        <InputText id="adminRole" aria-describedby="adminRoleHelp" class="form-control" @bind-Value="_tenantSettings.AdminRole" placeholder="Rolle für Administratoren" title="Admin-Rolle" />
+        <small id="adminRoleHelp" class="form-text text-muted">
+            Rolle, die für Administratoren dieses Tenants verwendet wird.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="url">Haupt-URL</label>
+        <InputText id="url" aria-describedby="urlHelp" class="form-control" @bind-Value="_tenantSettings.PrimaryUrl" placeholder="URL des Mandanten" title="Url" />
+        <small id="urlHelp" class="form-text text-muted">
+            Die Haupt-URL unter der der Mandant erreichbar ist.
+        </small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="clubmembership" aria-describedby="clubmembershipHelp" class="form-check-input" @bind-Value="_tenantSettings.ClubMemberShipAllow"></InputCheckbox>
+            <label for="clubmembership" class="form-check-label">Vereinsmitgliedschaft möglich?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen die Benutzer statt einer Kontaktinformation "Vereinsmitglied?" ankreuzen können?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="guestNameShown" aria-describedby="guestNameShownHelp" class="form-check-input" @bind-Value="_tenantSettings.GuestNameShown"></InputCheckbox>
+            <label for="guestNameShown" class="form-check-label">Namen der Gäste anzeigen?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen die Namen der Gäste wie die der anderen Teilnehmern angezeigt werden?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="tracksAllowed" aria-describedby="tracksAllowedHelp" class="form-check-input" @bind-Value="_tenantSettings.TracksEnabled"></InputCheckbox>
+            <label for="tracksAllowed" class="form-check-label">Streckenverwaltung einschalten?</label>
+        </div>
+        <small id="saveSettingsHelp">Sollen Optionen zur Verwaltung von Strecken freigeschaltet werden?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="localAdministrationDisabled" aria-describedby="localAdministrationDisabledHelp" class="form-check-input" @bind-Value="_tenantSettings.LocalAdministrationDisabled"></InputCheckbox>
+            <label for="localAdministrationDisabled" class="form-check-label">Lokale Administration abschalten?</label>
+        </div>
+        <small id="saveSettingsHelp">Soll die Adminstration direkt im MeetUpPlanner verhindert werden.?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="appLocked" class="form-check-input" @bind-Value="_tenantSettings.IsLocked" />
+            <label for="appLocked" class="form-checklabel">
+                Soll der Zugang zum MeetUpPlanner mit der Meldung unten gesperrt werden?
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="lockedMessage">Meldung falls MeetUpPlanner gesperrt</label>
+        <BlazoredTextEditor @ref="_htmlLockedMessage" Placeholder="Meldung als Hinweis an die Nutzer, falls der MeetUpPlanner gesperrt wird.">
+            <ToolbarContent>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>
+                @if (null != _tenantSettings.LockMessage)
+                {@((MarkupString)_tenantSettings.LockMessage)}
+            </EditorContent>
+
+        </BlazoredTextEditor>
+    </div>
+
+
+    <ValidationSummary />
+    <button type="submit" id="BtnSave" class="btn btn-primary">Einstellungen speichern ...</button>
+    <button type="reset" id="BtnCancel" class="btn btn-secondary" @onclick="@(() => OnCancel())">Zurück ohne Speichern</button>
+</EditForm>
+
+@code {
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+    [Parameter]
+    public string Id { get; set; }
+
+
+    private TenantSettings _tenantSettings = new TenantSettings();
+    private NotificationMessage _notificationMessage;
+    private BlazoredTextEditor _htmlLockedMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!AppStateStore.TenantsAlreadyRead)
+        {
+            try
+            {
+                AppStateStore.Tenants = await Api.GetTenants();
+                AppStateStore.TenantsAlreadyRead = true;
+            }
+            catch (Exception ex)
+            {
+                _notificationMessage.ShowError($"Fehler beim Lesen der Daten: {ex.Message}");
+            }
+        }
+        if (!String.IsNullOrEmpty(Id))
+        {
+            _tenantSettings = AppStateStore.Tenants.FirstOrDefault(t => t.Id.Equals(Id));
+        }
+    }
+
+    private async Task OnSave()
+    {
+        _notificationMessage.Hide();
+
+        // Check if tenant url is unique
+        TenantSettings tenantWithSameUrl = AppStateStore.Tenants.FirstOrDefault(t => t.PrimaryUrl.Equals(_tenantSettings.PrimaryUrl));
+        if (null != tenantWithSameUrl && !tenantWithSameUrl.Id.Equals(_tenantSettings.Id))
+        {
+            _notificationMessage.ShowError("Die Mandanten-Url wird bereits verwendet, bitte ändern");
+            return;
+        }
+
+        ModalResult result = await Confirm.ShowDialog(Modal, "Speichern?", "Sollen die Mandanteneinstellung wirklich gespeichert werden?");
+        if (result.Cancelled || !(result.Data is bool accepted) || !accepted)
+        {
+            return;
+        }
+        _tenantSettings.LockMessage = StripEmptyHtml(await _htmlLockedMessage.GetHTML());
+        try
+        {
+            await Api.WriteTenant(_tenantSettings);
+            NavigationManager.NavigateTo("/tenantlist");
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Speichern: {ex.Message}");
+        }
+    }
+    protected void OnCancel()
+    {
+        NavigationManager.NavigateTo("/tenantlist");
+    }
+    private string StripEmptyHtml(string htmlContent)
+    {
+        return htmlContent.Equals("<p><br></p>") ? null : htmlContent;
+    }
+
+
+}
