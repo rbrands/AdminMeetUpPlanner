@@ -5,6 +5,10 @@
       "allowedRoles": [ "authenticated" ]
     },
     {
+      "route": "/api/GetTenantSettings",
+      "allowedRoles": [ "admin,tenantadmin" ]
+    },
+    {
       "route": "/api/*",
       "allowedRoles": [ "admin" ]
     },

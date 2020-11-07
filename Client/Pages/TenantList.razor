@@ -1,5 +1,5 @@
 ﻿@page "/tenantlist"
-@attribute [Authorize(Roles = "admin")]
+@attribute [Authorize(Roles = Constants.RoleAllAdmins)]
 @using BlazorApp.Shared
 @using BlazorApp.Client.Utils
 @inject AppState AppStateStore
@@ -12,30 +12,41 @@
 <BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"></BlazorApp.Client.Shared.NotificationMessage>
 
 <div class="table-responsive">
-    <table class="table table-sm table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Aktion</th>
-                <th scope="col">Name</th>
-                <th scope="col">Kürzel</th>
-                <th scope="col">URL</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (TenantSettings tenant in _tenants)
-            {
-                <tr>
-                    <td>
-                        <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
-                        <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
-                    </td>
-                    <td>@tenant.TenantName</td>
-                    <td>@tenant.TenantKey</td>
-                    <td>@tenant.PrimaryUrl</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <AuthorizeView>
+        <Authorized>
+            <table class="table table-sm table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Aktion</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Kürzel</th>
+                        <th scope="col">URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (TenantSettings tenant in _tenants)
+                    {
+                        @if (context.User.IsInRole(Constants.RoleAdmin) || context.User.IsInRole(tenant.AdminRole))
+                        { 
+                            <tr>
+                                <td>
+                                    @if (context.User.IsInRole(Constants.RoleAdmin))
+                                    {
+                                        <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
+                                    }
+                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
+                                </td>
+                                <td>@tenant.TenantName</td>
+                                <td>@tenant.TenantKey</td>
+                                <td>@tenant.PrimaryUrl</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @code {

@@ -27,6 +27,13 @@
         </small>
     </div>
     <div class="form-group">
+        <label for="adminRole">Admin-Rolle</label>
+        <InputText id="adminRole" aria-describedby="adminRoleHelp" class="form-control" @bind-Value="_tenantSettings.AdminRole" placeholder="Rolle für Administratoren" title="Admin-Rolle" />
+        <small id="adminRoleHelp" class="form-text text-muted">
+            Rolle, die für Administratoren dieses Tenants verwendet wird.
+        </small>
+    </div>
+    <div class="form-group">
         <label for="url">Haupt-URL</label>
         <InputText id="url" aria-describedby="urlHelp" class="form-control" @bind-Value="_tenantSettings.PrimaryUrl" placeholder="URL des Mandanten" title="Url" />
         <small id="urlHelp" class="form-text text-muted">
@@ -53,6 +60,13 @@
             <label for="tracksAllowed" class="form-check-label">Streckenverwaltung einschalten?</label>
         </div>
         <small id="saveSettingsHelp">Sollen Optionen zur Verwaltung von Strecken freigeschaltet werden?</small>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="localAdministrationDisabled" aria-describedby="localAdministrationDisabledHelp" class="form-check-input" @bind-Value="_tenantSettings.LocalAdministrationDisabled"></InputCheckbox>
+            <label for="localAdministrationDisabled" class="form-check-label">Lokale Administration abschalten?</label>
+        </div>
+        <small id="saveSettingsHelp">Soll die Adminstration direkt im MeetUpPlanner verhindert werden.?</small>
     </div>
     <div class="form-group">
         <div class="form-check">
