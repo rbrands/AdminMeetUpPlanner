@@ -6,7 +6,7 @@
     },
     {
       "route": "/api/GetTenantSettings",
-      "allowedRoles": [ "admin,tenantadmin" ]
+      "allowedRoles": [ "admin", "tenantadmin" ]
     },
     {
       "route": "/api/*",
