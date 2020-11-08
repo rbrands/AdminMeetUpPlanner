@@ -18,7 +18,7 @@ namespace BlazorApp.Shared
         [Required(ErrorMessage = "Primary URL erforderlich."), MaxLength(180, ErrorMessage = "Primary URL bitte kürzer als 180 Zeichen.")]
         [RegularExpression(@"^https\:\/\/[0-9a-z]([-.\w]*[0-9a-z])*(:(0-9)*)*(\/?)([a-z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$", ErrorMessage = "Bitte eine gültige URL https://ausfahrten ... eingeben")]
         public string PrimaryUrl { get; set; }
-        public Boolean ClubMemberShipAllow { get; set; } = true;
+        public Boolean ClubMemberShipAllowed { get; set; } = true;
         public Boolean GuestNameShown { get; set; } = true;
         public Boolean IsLocked { get; set; } = false;
         public string LockMessage { get; set; }
