@@ -4,3 +4,4 @@ This repo references the following sources, supplied by the following licenses:
 - Blazored TextEditor Copyright 2019 Blazored. Licensed under MIT (https://github.com/Blazored/TextEditor/blob/main/LICENSE)
 - Blazored Modal Copyright 2019 Blazored. Licensed under MIT (https://github.com/Blazored/Modal/blob/main/LICENSE)
 - Blazor Authentication Extension for Azure Static Web Apps Copyright 2020 Anthony Chu. Licensed under MIT (https://github.com/anthonychu/blazor-auth-static-web-apps/blob/main/LICENSE)
+- BlazorDownloadFile Copyright 2020 Anthony G. Rivera Cosme. Licensed under MIT (https://github.com/arivera12/BlazorDownloadFile/blob/master/LICENSE.txt)
