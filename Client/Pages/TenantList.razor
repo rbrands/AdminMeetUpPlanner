@@ -36,7 +36,7 @@
                                         <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
                                     }
                                     <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => AdminTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
-                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => ExportTrackingReport(tenant.Id))"><span class="oi oi-data-transfer-download"></span></button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Export" @onclick="@(() => ExportTrackingReport(tenant.Id))"><span class="oi oi-data-transfer-download"></span></button>
                                 </td>
                                 <td>@tenant.TenantName</td>
                                 <td>@tenant.TenantKey</td>
