@@ -97,11 +97,7 @@
                     <button class="ql-link"></button>
                 </span>
             </ToolbarContent>
-            <EditorContent>
-                @if (null != _tenantSettings.LockMessage)
-                {@((MarkupString)_tenantSettings.LockMessage)}
-            </EditorContent>
-
+            <EditorContent>@if (null != _tenantSettings.LockMessage){@((MarkupString)_tenantSettings.LockMessage)}</EditorContent>
         </BlazoredTextEditor>
     </div>
 
@@ -153,6 +149,10 @@
         {
             _notificationMessage.ShowError("Die Mandanten-Url wird bereits verwendet, bitte ändern");
             return;
+        }
+        if (String.IsNullOrWhiteSpace(_tenantSettings.TenantKey))
+        {
+            _tenantSettings.TenantKey = null;
         }
 
         ModalResult result = await Confirm.ShowDialog(Modal, "Speichern?", "Sollen die Mandanteneinstellung wirklich gespeichert werden?");

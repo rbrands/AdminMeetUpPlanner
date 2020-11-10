@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AnthonyChu.AzureStaticWebApps.Blazor.Authentication" Version="0.0.2-preview" />
+    <PackageReference Include="BlazorDownloadFile" Version="2.1.2" />
     <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
     <PackageReference Include="Blazored.Modal" Version="5.1.0" />
     <PackageReference Include="Blazored.TextEditor" Version="1.0.3" />

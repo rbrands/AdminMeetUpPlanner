@@ -39,6 +39,12 @@ namespace BlazorApp.Api
             builder.Services.AddSingleton(config);
             builder.Services.AddSingleton(cosmosClient);
             builder.Services.AddSingleton<CosmosDBRepository<TenantSettings>>();
+            builder.Services.AddSingleton<CosmosDBRepository<ServerSettings>>();
+            builder.Services.AddSingleton<CosmosDBRepository<ClientSettings>>();
+            builder.Services.AddSingleton<CosmosDBRepository<Participant>>();
+            builder.Services.AddSingleton<CosmosDBRepository<CalendarItem>>();
+            builder.Services.AddSingleton<CosmosDBRepository<ExportLogItem>>();
+
         }
     }
 }
