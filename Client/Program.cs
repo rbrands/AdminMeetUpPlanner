@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AzureStaticWebApps.Blazor.Authentication;
 using Blazored.LocalStorage;
 using Blazored.Modal;
+using BlazorDownloadFile;
 
 namespace BlazorApp.Client
 {
@@ -24,6 +25,7 @@ namespace BlazorApp.Client
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddBlazoredModal();
             builder.Services.AddStaticWebAppsAuthentication();
+            builder.Services.AddBlazorDownloadFile();
 
             await builder.Build().RunAsync();
         }

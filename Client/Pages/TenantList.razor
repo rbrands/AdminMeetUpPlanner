@@ -35,7 +35,8 @@
                                         <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
                                         <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
                                     }
-                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => AdminTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
+                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => ExportTrackingReport(tenant.Id))"><span class="oi oi-data-transfer-download"></span></button>
                                 </td>
                                 <td>@tenant.TenantName</td>
                                 <td>@tenant.TenantKey</td>
@@ -73,6 +74,14 @@
     protected void EditTenant(string Id)
     {
         NavigationManager.NavigateTo($"/edittenant/{Id}");
+    }
+    protected void AdminTenant(string Id)
+    {
+        NavigationManager.NavigateTo($"/administration/{Id}");
+    }
+    protected void ExportTrackingReport(string Id)
+    {
+        NavigationManager.NavigateTo($"/exportcontactreport/{Id}");
     }
 
     protected async Task DeleteTenant(TenantSettings tenantSettings)

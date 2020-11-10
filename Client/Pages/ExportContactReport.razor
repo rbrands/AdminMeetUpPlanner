@@ -1,0 +1,145 @@
+﻿@page "/exportcontactreport/{Id}"
+@attribute [Authorize(Roles = "admin,tenantadmin")]
+@using BlazorApp.Shared
+@using BlazorApp.Client.Utils
+@using Newtonsoft.Json
+@using BlazorDownloadFile
+@using System.IO
+@inject AppState AppStateStore
+@inject BackendApiRepository Api
+@inject NavigationManager NavigationManager
+
+<div class="jumbotron">
+    <h1>Kontaktliste</h1>
+    <p>
+        Wenn der Fall eingetreten ist, dass jemand positiv auf Covid-19 getestet wurde, braucht er/sie seine Kontakte der letzten Wochen. Hier kann der entsprechende Report erstellt werden.
+    </p>
+</div>
+
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage" />
+<h4>Export</h4>
+<EditForm Model="@_trackingRequest" OnValidSubmit="StartExport">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-row">
+        <div class="form-group col">
+            <InputText id="firstname" class="form-control" @bind-Value="_trackingRequest.TrackFirstName" autocomplete="on" placeholder="Kontaktliste für: Vorname" title="Vorname" />
+        </div>
+        <div class="form-group col">
+            <InputText id="lastName" class="form-control" @bind-Value="_trackingRequest.TrackLastName" autocomplete="on" placeholder="Kontaktliste für: Nachname" title="Nachname" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Comment">Begründung</label>
+        <InputTextArea id="Comment" aria-describedby="commentHelp" class="form-control" @bind-Value="_trackingRequest.Comment" autocomplete="on" placeholder="Begründung für den Export der Kontaktliste" title="Begründung" />
+        <small id="commentHelp" class="form-text text-muted">
+            Bitte hier kurz begründen wieso eine Kontakliste benötigt wird.
+        </small>
+    </div>
+    <button type="submit" id="BtnRequest" class="btn btn-primary">Export starten</button>
+</EditForm>
+
+<h4>Export Historie</h4>
+<div class="table-responsive">
+    <table class="table table-condensed table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Von</th>
+                <th>Für</th>
+                <th>Kommentar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ExportLogItem e in _log)
+            {
+                <tr>
+                    <td>@e.RequestDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@e.RequestorFirstName/@e.RequestorLastName</td>
+                    <td>@e.RequestedFirstName @e.RequestedLastName</td>
+                    <td>@e.RequestReason</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+@code {
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+    [Parameter]
+    public string Id { get; set; }
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    private IEnumerable<ExportLogItem> _log = new List<ExportLogItem>();
+    private TenantSettings _tenantSettings = new TenantSettings();
+    private TrackingReportRequest _trackingRequest = new TrackingReportRequest();
+    private NotificationMessage _notificationMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!AppStateStore.TenantsAlreadyRead)
+        {
+            try
+            {
+                AppStateStore.Tenants = await Api.GetTenants();
+                AppStateStore.TenantsAlreadyRead = true;
+            }
+            catch (Exception ex)
+            {
+                _notificationMessage.ShowError($"Fehler beim Lesen der Daten: {ex.Message}");
+            }
+        }
+        _tenantSettings = AppStateStore.Tenants.FirstOrDefault(t => t.Id.Equals(Id));
+        try
+        {
+            _log = await Api.GetExportLog(_tenantSettings.Id);
+            _trackingRequest.TenantId = Id;
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Lesen der Daten: {ex.Message}");
+        }
+    }
+    protected async Task StartExport()
+    {
+        try
+        {
+            // Get tracking report
+            TrackingReport report = await Api.ExportTrackingReport(_trackingRequest);
+
+            // Filename for export file
+            string fileName = String.Format("{0:yyyy}-{1:MM}-{2:dd}{3}_{4}.csv", report.CreationDate, report.CreationDate, report.CreationDate, report.ReportRequest.TrackFirstName, report.ReportRequest.TrackLastName);
+
+            // Assemble Excel (CSV) file
+            StringWriter csvData = new StringWriter();
+            // Write header line
+            csvData.Write("Mitfahrer;");
+            foreach (CompanionCalendarInfo c in report.CalendarList)
+            {
+                csvData.Write(c.StartDate.ToString("dd.MM.yyyy HH:mm") + ";");
+            }
+            csvData.WriteLine();
+            // Write line for every companion
+            foreach (Companion c in report.CompanionList)
+            {
+                csvData.Write(c.FirstName + " " + c.LastName + " - " + c.AddressInfo + ";");
+                foreach (bool b in c.EventList)
+                {
+                    csvData.Write(b ? "1;" : " ;");
+                }
+                csvData.WriteLine();
+            }
+            await BlazorDownloadFileService.DownloadFile(fileName, new System.Text.UTF32Encoding().GetBytes(csvData.ToString()), "text/csv");
+            _log = await Api.GetExportLog(_tenantSettings.Id);
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Erstellen des Reports: {ex.Message}");
+        }
+    }
+
+
+}

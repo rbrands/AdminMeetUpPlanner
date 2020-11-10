@@ -20,21 +20,7 @@ namespace BlazorApp.Api
             ILogger log)
         {
             log.LogInformation("GetUserDetails called");
-            ClientPrincipal user = new ClientPrincipal()
-            {
-                IdentityProvider = "devtest",
-                UserId = "test123",
-                UserDetails = "rbrands",
-                UserRoles = new String[] { "anonymous", "authenticated", "admin" }
-            };
-
-            string header = req.Headers["x-ms-client-principal"];
-            if (!String.IsNullOrEmpty(header))
-            {
-                var decoded = System.Convert.FromBase64String(header);
-                var json = System.Text.ASCIIEncoding.ASCII.GetString(decoded);
-                user = JsonSerializer.Deserialize<ClientPrincipal>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
+            ClientPrincipal user = Utils.UserDetails.GetClientPrincipal(req);
 
             return new OkObjectResult(user);
         }

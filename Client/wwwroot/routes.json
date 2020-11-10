@@ -9,6 +9,30 @@
       "allowedRoles": [ "admin", "tenantadmin" ]
     },
     {
+      "route": "/api/GetClientSettings",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/GetServerSettings",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/WriteServerSettings",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/WriteClientSettings",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/ExportTrackingReport",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
+      "route": "/api/GetExportLog",
+      "allowedRoles": [ "admin", "tenantadmin" ]
+    },
+    {
       "route": "/api/*",
       "allowedRoles": [ "admin" ]
     },

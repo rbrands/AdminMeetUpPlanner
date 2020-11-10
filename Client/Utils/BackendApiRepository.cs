@@ -40,6 +40,35 @@ namespace BlazorApp.Client.Utils
         {
             await _http.PostAsJsonAsync<TenantSettings>($"/api/DeleteTenantSettings", tenant);
         }
-
+        public async Task<ServerSettings> GetServerSettings(string tenantId)
+        {
+            return await _http.GetFromJsonAsync<ServerSettings>($"/api/GetServerSettings/{tenantId}");
+        }
+        public async Task<ClientSettings> GetClientSettings(string tenantId)
+        {
+            return await _http.GetFromJsonAsync<ClientSettings>($"/api/GetClientSettings/{tenantId}");
+        }
+        public async Task<ServerSettings> WriteServerSettings(string tenantId, ServerSettings serverSettings)
+        {
+            HttpResponseMessage response = await _http.PostAsJsonAsync<ServerSettings>($"/api/WriteServerSettings/{tenantId}", serverSettings);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ServerSettings>();
+        }
+        public async Task<ClientSettings> WriteClientSettings(string tenantId, ClientSettings clientSettings)
+        {
+            HttpResponseMessage response = await _http.PostAsJsonAsync<ClientSettings>($"/api/WriteClientSettings/{tenantId}", clientSettings);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ClientSettings>();
+        }
+        public async Task<TrackingReport> ExportTrackingReport(TrackingReportRequest request)
+        {
+            HttpResponseMessage response = await _http.PostAsJsonAsync<TrackingReportRequest>($"/api/ExportTrackingReport", request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<TrackingReport>();
+        }
+        public async Task<IEnumerable<ExportLogItem>> GetExportLog(string tenantId)
+        {
+            return await _http.GetFromJsonAsync<IEnumerable<ExportLogItem>>($"/api/GetExportLog/{tenantId}");
+        }
     }
 }
