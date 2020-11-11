@@ -14,38 +14,45 @@
 <div class="table-responsive">
     <AuthorizeView>
         <Authorized>
-            <table class="table table-sm table-striped table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Aktion</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Kürzel</th>
-                        <th scope="col">URL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (TenantSettings tenant in _tenants)
-                    {
-                        @if (context.User.IsInRole(Constants.RoleAdmin) || context.User.IsInRole(tenant.AdminRole))
-                        { 
-                            <tr>
-                                <td>
-                                    @if (context.User.IsInRole(Constants.RoleAdmin))
-                                    {
-                                        <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
-                                        <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
-                                    }
-                                    <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => AdminTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
-                                    <button class="btn btn-sm btn-outline-secondary" title="Export" @onclick="@(() => ExportTrackingReport(tenant.Id))"><span class="oi oi-data-transfer-download"></span></button>
-                                </td>
-                                <td>@tenant.TenantName</td>
-                                <td>@tenant.TenantKey</td>
-                                <td>@tenant.PrimaryUrl</td>
-                            </tr>
+            @if (null == _tenants)
+            {
+                <p><em>Mandanten-Daten werden geladen...</em></p>
+            }
+            else
+            { 
+                <table class="table table-sm table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Aktion</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Kürzel</th>
+                            <th scope="col">URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (TenantSettings tenant in _tenants)
+                        {
+                            @if (context.User.IsInRole(Constants.RoleAdmin) || context.User.IsInRole(tenant.AdminRole))
+                            {
+                                <tr>
+                                    <td>
+                                        @if (context.User.IsInRole(Constants.RoleAdmin))
+                                        {
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => EditTenant(tenant.Id))"><span class="oi oi-pencil"></span></button>
+                                            <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteTenant(tenant))"><span class="oi oi-trash"></span></button>
+                                        }
+                                        <button class="btn btn-sm btn-outline-secondary" title="Ändern" @onclick="@(() => AdminTenant(tenant.Id))"><span class="oi oi-wrench"></span></button>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Export" @onclick="@(() => ExportTrackingReport(tenant.Id))"><span class="oi oi-data-transfer-download"></span></button>
+                                    </td>
+                                    <td>@tenant.TenantName</td>
+                                    <td>@tenant.TenantKey</td>
+                                    <td>@tenant.PrimaryUrl</td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            }
         </Authorized>
     </AuthorizeView>
 </div>
@@ -54,7 +61,7 @@
     [CascadingParameter]
     public IModalService Modal { get; set; }
 
-    private IEnumerable<TenantSettings> _tenants = new List<TenantSettings>();
+    private IEnumerable<TenantSettings> _tenants = null;
     private NotificationMessage _notificationMessage;
 
 
