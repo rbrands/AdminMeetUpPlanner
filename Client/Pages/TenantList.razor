@@ -16,7 +16,7 @@
         <Authorized>
             @if (null == _tenants)
             {
-                <p><em>Mandanten-Daten werden geladen...</em></p>
+                <p><em>Mandanten-Daten werden geladen... Beim ersten Aufruf dauert das ein bisschen.</em></p>
             }
             else
             { 
@@ -46,7 +46,7 @@
                                     </td>
                                     <td>@tenant.TenantName</td>
                                     <td>@tenant.TenantKey</td>
-                                    <td>@tenant.PrimaryUrl</td>
+                                    <td><a href="@tenant.PrimaryUrl" title="@tenant.TenantName" target="_blank">@tenant.PrimaryUrl</a></td>
                                 </tr>
                             }
                         }
