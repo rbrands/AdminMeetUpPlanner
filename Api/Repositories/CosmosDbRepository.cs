@@ -104,14 +104,21 @@ namespace BlazorApp.Api.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public T GetFirstItemOrDefault(Expression<Func<T, bool>> predicate)
+        public async Task<T> GetFirstItemOrDefault(Expression<Func<T, bool>> predicate)
         {
             Container container = _cosmosClient.GetDatabase(_cosmosDbDatabase).GetContainer(_cosmosDbContainer);
             PartitionKey partitionKey = new PartitionKey(typeof(T).Name);
 
-            T firstItem = container.GetItemLinqQueryable<T>(true, null, new QueryRequestOptions { MaxItemCount = 1, PartitionKey = partitionKey })
+            FeedIterator<T> itemIterator = container.GetItemLinqQueryable<T>(true, null, new QueryRequestOptions { MaxItemCount = 1, PartitionKey = partitionKey })
                                              .Where(d => d.Type == typeof(T).Name)
-                                             .Where<T>(predicate).FirstOrDefault();
+                                             .Where<T>(predicate)
+                                             .ToFeedIterator<T>();
+            List<T> results = new List<T>();
+            while (itemIterator.HasMoreResults)
+            {
+                results.AddRange(await itemIterator.ReadNextAsync());
+            }
+            T firstItem = results.FirstOrDefault();
             return firstItem;
         }
         public async Task<IEnumerable<T>> GetItems()
