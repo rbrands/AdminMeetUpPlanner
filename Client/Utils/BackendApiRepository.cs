@@ -30,6 +30,10 @@ namespace BlazorApp.Client.Utils
         {
             return await _http.GetFromJsonAsync<IEnumerable<TenantSettings>>($"/api/GetTenantSettings");
         }
+        public async Task<IEnumerable<NotificationSubscription>> GetNotificationSubscriptions()
+        {
+            return await _http.GetFromJsonAsync<IEnumerable<NotificationSubscription>>($"/api/GetNotificationSubscriptions");
+        }
         public async Task<TenantSettings> WriteTenant(TenantSettings tenant)
         {
             HttpResponseMessage response = await _http.PostAsJsonAsync<TenantSettings>($"/api/WriteTenantSettings", tenant);
@@ -39,6 +43,10 @@ namespace BlazorApp.Client.Utils
         public async Task DeleteTenant(TenantSettings tenant)
         {
             await _http.PostAsJsonAsync<TenantSettings>($"/api/DeleteTenantSettings", tenant);
+        }
+        public async Task DeleteNotificationSubscription(NotificationSubscription notificationSubscription)
+        {
+            await _http.PostAsJsonAsync<NotificationSubscription>($"/api/DeleteNotificationSubscription", notificationSubscription);
         }
         public async Task<ServerSettings> GetServerSettings(string tenantId)
         {

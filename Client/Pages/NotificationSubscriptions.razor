@@ -1,0 +1,90 @@
+﻿@page "/notificationsubscriptions"
+@attribute [Authorize(Roles = Constants.RoleAdmin)]
+@using BlazorApp.Shared
+@using BlazorApp.Client.Utils
+@using System 
+@inject AppState AppStateStore
+@inject BackendApiRepository Api
+@inject NavigationManager NavigationManager
+
+<h1>Benachrichtigungen</h1>
+<BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage"></BlazorApp.Client.Shared.NotificationMessage>
+
+<div class="table-responsive">
+    @if (null == _notificationSubscriptions)
+    {
+        <p><em>Daten werden geladen...</em></p>
+    }
+    else
+    {
+        <table class="table table-sm table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Aktion</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Planner</th>
+                    <th scope="col">Client</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (NotificationSubscription n in _notificationSubscriptions)
+                {
+                    <tr>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary" title="Löschen" @onclick="@(() => DeleteNotificationSubscription(n))"><span class="oi oi-trash"></span></button>
+                        </td>
+                        <td>@n.UserFirstName @n.UserLastName</td>
+                        <td>@n.PlannerUrl</td>
+                        <td>@GetReceiverPrefix(n)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
+    private IEnumerable<NotificationSubscription> _notificationSubscriptions = null;
+    private NotificationMessage _notificationMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _notificationSubscriptions = await Api.GetNotificationSubscriptions();
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Daten können nicht gelesen werden: {ex.Message}");
+        }
+    }
+
+    protected async Task DeleteNotificationSubscription(NotificationSubscription notificationSubscription)
+    {
+        ModalResult result = await Confirm.ShowDialog(Modal, $"Benachrichtigung löschen?", $"Sollen die Benachrichtigungen für {notificationSubscription.UserFirstName} {notificationSubscription.UserLastName}  wirklich gelöscht werden?");
+        if (result.Cancelled || !(result.Data is bool accepted) || !accepted)
+        {
+            return;
+        }
+        try
+        {
+            await Api.DeleteNotificationSubscription(notificationSubscription);
+            _notificationSubscriptions = await Api.GetNotificationSubscriptions();
+        }
+        catch (Exception ex)
+        {
+            _notificationMessage.ShowError($"Fehler beim Löschen: {ex.Message}");
+        }
+    }
+
+    protected string GetReceiverPrefix(NotificationSubscription notificationSubscription)
+    {
+        Uri receiver = new Uri(notificationSubscription.Url);
+        return receiver.GetLeftPart(UriPartial.Path);
+    }
+
+
+}

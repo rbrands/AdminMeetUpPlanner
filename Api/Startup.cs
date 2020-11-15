@@ -44,6 +44,7 @@ namespace BlazorApp.Api
             builder.Services.AddSingleton<CosmosDBRepository<Participant>>();
             builder.Services.AddSingleton<CosmosDBRepository<CalendarItem>>();
             builder.Services.AddSingleton<CosmosDBRepository<ExportLogItem>>();
+            builder.Services.AddSingleton<CosmosDBRepository<NotificationSubscription>>();
 
         }
     }
