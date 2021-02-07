@@ -11,8 +11,8 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public string Message { get; set; } = "Bitte bestätigen oder abbrechen.";
 
-    void Close() => BlazoredModal.Close(ModalResult.Ok(true));
-    void Cancel() => BlazoredModal.Cancel();
+    void Close() => BlazoredModal.CloseAsync(ModalResult.Ok(true));
+    void Cancel() => BlazoredModal.CancelAsync();
 
     /// <summary>
     /// Method to call a confirmations call "all-in-one"

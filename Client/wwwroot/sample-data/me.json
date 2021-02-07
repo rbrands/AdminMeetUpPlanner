@@ -6,7 +6,9 @@
     "userRoles": [
       "anonymous",
       "authenticated",
-      "admin"
+      "tenantadmin",
+      "demo",
+      "fs"
     ]
   }
 }
