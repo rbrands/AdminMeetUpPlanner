@@ -82,222 +82,236 @@
                     <button class="ql-link"></button>
                 </span>
             </ToolbarContent>
-            <EditorContent>@if (null != _clientSettings.WelcomeMessage){@((MarkupString)_clientSettings.WelcomeMessage)}</EditorContent>
-    </BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <label for="logoLink">Link zu einem Logo-Bild</label>
-    <InputText id="logoLink" aria-describedby="logoLinkHelp" class="form-control" @bind-Value="_clientSettings.LogoLink" />
-    <small id="logoLinkHelp" class="form-text text-muted">
-        Hier kann der Link zu einem Logo angegeben werden.
-    </small>
-</div>
-<div class="form-group">
-    <label for="helpLink">Link zur Online-Hilfe</label>
-    <InputText id="helpLink" aria-describedby="helpLinkHelp" class="form-control" @bind-Value="_clientSettings.HelpLink" />
-    <small id="helpLinkHelp" class="form-text text-muted">
-        Hinweise zur Bedienung.
-    </small>
-</div>
+            <EditorContent>@if (null != _clientSettings.WelcomeMessage)
+            {@((MarkupString)_clientSettings.WelcomeMessage)}</EditorContent>
+        </BlazoredTextEditor>
+    </div>
+    <div class="form-group">
+        <label for="logoLink">Link zu einem Logo-Bild</label>
+        <InputText id="logoLink" aria-describedby="logoLinkHelp" class="form-control" @bind-Value="_clientSettings.LogoLink" />
+        <small id="logoLinkHelp" class="form-text text-muted">
+            Hier kann der Link zu einem Logo angegeben werden.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="helpLink">Link zur Online-Hilfe</label>
+        <InputText id="helpLink" aria-describedby="helpLinkHelp" class="form-control" @bind-Value="_clientSettings.HelpLink" />
+        <small id="helpLinkHelp" class="form-text text-muted">
+            Hinweise zur Bedienung.
+        </small>
+    </div>
 
-<div class="form-group">
-    <label for="whiteboardMessage">Whiteboard Nachricht</label>
-    <BlazoredTextEditor @ref="@htmlWhiteboardMessage" Placeholder="Nachricht für die Terminseite">
-        <ToolbarContent>
-            <select class="ql-header">
-                <option selected=""></option>
-                <option value="1"></option>
-                <option value="2"></option>
-                <option value="3"></option>
-                <option value="4"></option>
-                <option value="5"></option>
-            </select>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-                <button class="ql-strike"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>@if (null != _clientSettings.WhiteboardMessage){@((MarkupString)_clientSettings.WhiteboardMessage)}</EditorContent>
-</BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <label for="newMeetUpMessage">Nachricht für neue MeetUps</label>
-    <BlazoredTextEditor @ref="@htmlNewMeetupMessage" Placeholder="Nachricht für neue Termine">
-        <ToolbarContent>
-            <select class="ql-header">
-                <option selected=""></option>
-                <option value="1"></option>
-                <option value="2"></option>
-                <option value="3"></option>
-                <option value="4"></option>
-                <option value="5"></option>
-            </select>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>@if (null != _clientSettings.NewMeetupMessage){@((MarkupString)_clientSettings.NewMeetupMessage)}</EditorContent>
-</BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <label for="disclaimerMessage">Disclaimer für Teilnehmer</label>
-    <BlazoredTextEditor @ref="@htmlDisclaimer" Placeholder="Disclaimer">
-        <ToolbarContent>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>@if (null != _clientSettings.Disclaimer){@((MarkupString)_clientSettings.Disclaimer)}</EditorContent>
-</BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <label for="guestDisclaimerMessage">Disclaimer für Gast-Teilnehmer</label>
-    <BlazoredTextEditor @ref="@htmlGuestDisclaimer" Placeholder="Disclaimer für Gäste">
-        <ToolbarContent>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>@if (null != _clientSettings.GuestDisclaimer){@((MarkupString)_clientSettings.GuestDisclaimer)}</EditorContent>
-</BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <div class="form-check">
-        <InputCheckbox id="guestsEnabled" class="form-check-input" @bind-Value="_clientSettings.GuestsEnabled" />
-        <label for="guestsEnabled" class="form-checklabel">
-            Einladen von Gästen möglich?
-        </label>
+    <div class="form-group">
+        <label for="whiteboardMessage">Whiteboard Nachricht</label>
+        <BlazoredTextEditor @ref="@htmlWhiteboardMessage" Placeholder="Nachricht für die Terminseite">
+            <ToolbarContent>
+                <select class="ql-header">
+                    <option selected=""></option>
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option value="4"></option>
+                    <option value="5"></option>
+                </select>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>@if (null != _clientSettings.WhiteboardMessage)
+            {@((MarkupString)_clientSettings.WhiteboardMessage)}</EditorContent>
+        </BlazoredTextEditor>
     </div>
-</div>
-<div class="form-group">
-    <div class="form-check">
-        <InputCheckbox id="onlyAdminsAsHost" class="form-check-input" @bind-Value="_clientSettings.OnlyAdminsAsHost" />
-        <label for="onlyAdminsAsHost" class="form-checklabel">
-            Sollen nur Admins MeetUps anlegen können?
-        </label>
+    <div class="form-group">
+        <label for="newMeetUpMessage">Nachricht für neue MeetUps</label>
+        <BlazoredTextEditor @ref="@htmlNewMeetupMessage" Placeholder="Nachricht für neue Termine">
+            <ToolbarContent>
+                <select class="ql-header">
+                    <option selected=""></option>
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option value="4"></option>
+                    <option value="5"></option>
+                </select>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>@if (null != _clientSettings.NewMeetupMessage)
+            {@((MarkupString)_clientSettings.NewMeetupMessage)}</EditorContent>
+        </BlazoredTextEditor>
     </div>
-</div>
-<div class="form-group">
-    <div class="form-check">
-        <InputCheckbox id="appLocked" class="form-check-input" @bind-Value="_clientSettings.AppLocked" />
-        <label for="appLocked" class="form-checklabel">
-            Soll der Zugang zum MeetUpPlanner mit der Meldung unten gesperrt werden?
-        </label>
+    <div class="form-group">
+        <label for="disclaimerMessage">Disclaimer für Teilnehmer</label>
+        <BlazoredTextEditor @ref="@htmlDisclaimer" Placeholder="Disclaimer">
+            <ToolbarContent>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>@if (null != _clientSettings.Disclaimer)
+            {@((MarkupString)_clientSettings.Disclaimer)}</EditorContent>
+        </BlazoredTextEditor>
     </div>
-</div>
-<div class="form-group">
-    <label for="lockedMessage">Meldung falls MeetUpPlanner gesperrt</label>
-    <BlazoredTextEditor @ref="@htmlLockedMessage" Placeholder="Meldung als Hinweis an die Nutzer, falls der MeetUpPlanner gesperrt wird.">
-        <ToolbarContent>
-            <span class="ql-formats">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered"></button>
-                <button class="ql-list" value="bullet"></button>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-link"></button>
-            </span>
-        </ToolbarContent>
-        <EditorContent>@if (null != _clientSettings.LockedMessage){@((MarkupString)_clientSettings.LockedMessage)}</EditorContent>
-    </BlazoredTextEditor>
-</div>
-<div class="form-group">
-    <div class="form-check">
-        <InputCheckbox id="onlyScoped" class="form-check-input" @bind-Value="_clientSettings.OnlyScopedMeetUpsAllowed" />
-        <label for="onlyScoped" class="form-checklabel">
-            Nur MeetUps an den Tagen zulassen, die mit den "Badges" unten gekennzeichnet sind?
-        </label>
+    <div class="form-group">
+        <label for="guestDisclaimerMessage">Disclaimer für Gast-Teilnehmer</label>
+        <BlazoredTextEditor @ref="@htmlGuestDisclaimer" Placeholder="Disclaimer für Gäste">
+            <ToolbarContent>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>@if (null != _clientSettings.GuestDisclaimer)
+            {@((MarkupString)_clientSettings.GuestDisclaimer)}</EditorContent>
+        </BlazoredTextEditor>
     </div>
-</div>
-<div class="form-row">
-    <div class="form-group col-md-12">
-        <label for="mondayBadge">Die Wochentage können mit "Badges" gekennzeichnet werden.</label>
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="guestsEnabled" class="form-check-input" @bind-Value="_clientSettings.GuestsEnabled" />
+            <label for="guestsEnabled" class="form-checklabel">
+                Einladen von Gästen möglich?
+            </label>
+        </div>
     </div>
-</div>
-<div class="form-row">
-    <div class="form-group col">
-        <InputText id="mondayBadge" placeholder="Montag" class="form-control form-control-sm" @bind-Value="_clientSettings.MondayBadge" title="Badge für Montag" />
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="publicJoiningEnabled" class="form-check-input" @bind-Value="_clientSettings.PublicMeetUpJoiningEnabled" />
+            <label for="publicJoiningEnabled" class="form-checklabel">
+                Sollen die MeetUps öffentlich sichtbar und offen für Teilnehmer ohne Schlüsselwort sein?
+            </label>
+        </div>
     </div>
-    <div class="form-group col">
-        <InputText id="tuesdayBadge" placeholder="Dienstag" class="form-control form-control-sm" @bind-Value="_clientSettings.TuesdayBadge" title="Badge für Dienstag" />
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="onlyAdminsAsHost" class="form-check-input" @bind-Value="_clientSettings.OnlyAdminsAsHost" />
+            <label for="onlyAdminsAsHost" class="form-checklabel">
+                Sollen nur Admins MeetUps anlegen können?
+            </label>
+        </div>
     </div>
-    <div class="form-group col">
-        <InputText id="wednsesdayBadge" placeholder="Mittwoch" class="form-control form-control-sm" @bind-Value="_clientSettings.WednesdayBadge" title="Badge für Mittwoch" />
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="appLocked" class="form-check-input" @bind-Value="_clientSettings.AppLocked" />
+            <label for="appLocked" class="form-checklabel">
+                Soll der Zugang zum MeetUpPlanner mit der Meldung unten gesperrt werden?
+            </label>
+        </div>
     </div>
-    <div class="form-group col">
-        <InputText id="thursdayBadge" placeholder="Donnerstag" class="form-control form-control-sm" @bind-Value="_clientSettings.ThursdayBadge" title="Badge für Donnerstag" />
+    <div class="form-group">
+        <label for="lockedMessage">Meldung falls MeetUpPlanner gesperrt</label>
+        <BlazoredTextEditor @ref="@htmlLockedMessage" Placeholder="Meldung als Hinweis an die Nutzer, falls der MeetUpPlanner gesperrt wird.">
+            <ToolbarContent>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </ToolbarContent>
+            <EditorContent>@if (null != _clientSettings.LockedMessage)
+            {@((MarkupString)_clientSettings.LockedMessage)}</EditorContent>
+        </BlazoredTextEditor>
     </div>
-    <div class="form-group col">
-        <InputText id="fridayBadge" placeholder="Freitag" class="form-control form-control-sm" @bind-Value="_clientSettings.FridayBadge" title="Badge für Freitag" />
+    <div class="form-group">
+        <div class="form-check">
+            <InputCheckbox id="onlyScoped" class="form-check-input" @bind-Value="_clientSettings.OnlyScopedMeetUpsAllowed" />
+            <label for="onlyScoped" class="form-checklabel">
+                Nur MeetUps an den Tagen zulassen, die mit den "Badges" unten gekennzeichnet sind?
+            </label>
+        </div>
     </div>
-    <div class="form-group col">
-        <InputText id="saturdayBadge" placeholder="Samstag" class="form-control form-control-sm" @bind-Value="_clientSettings.SaturdayBadge" title="Badge für Samstag" />
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="mondayBadge">Die Wochentage können mit "Badges" gekennzeichnet werden.</label>
+        </div>
     </div>
-    <div class="form-group col">
-        <InputText id="sundayBadge" placeholder="Sonntag" class="form-control form-control-sm" @bind-Value="_clientSettings.SundayBadge" title="Badge für Sonntag" />
+    <div class="form-row">
+        <div class="form-group col">
+            <InputText id="mondayBadge" placeholder="Montag" class="form-control form-control-sm" @bind-Value="_clientSettings.MondayBadge" title="Badge für Montag" />
+        </div>
+        <div class="form-group col">
+            <InputText id="tuesdayBadge" placeholder="Dienstag" class="form-control form-control-sm" @bind-Value="_clientSettings.TuesdayBadge" title="Badge für Dienstag" />
+        </div>
+        <div class="form-group col">
+            <InputText id="wednsesdayBadge" placeholder="Mittwoch" class="form-control form-control-sm" @bind-Value="_clientSettings.WednesdayBadge" title="Badge für Mittwoch" />
+        </div>
+        <div class="form-group col">
+            <InputText id="thursdayBadge" placeholder="Donnerstag" class="form-control form-control-sm" @bind-Value="_clientSettings.ThursdayBadge" title="Badge für Donnerstag" />
+        </div>
+        <div class="form-group col">
+            <InputText id="fridayBadge" placeholder="Freitag" class="form-control form-control-sm" @bind-Value="_clientSettings.FridayBadge" title="Badge für Freitag" />
+        </div>
+        <div class="form-group col">
+            <InputText id="saturdayBadge" placeholder="Samstag" class="form-control form-control-sm" @bind-Value="_clientSettings.SaturdayBadge" title="Badge für Samstag" />
+        </div>
+        <div class="form-group col">
+            <InputText id="sundayBadge" placeholder="Sonntag" class="form-control form-control-sm" @bind-Value="_clientSettings.SundayBadge" title="Badge für Sonntag" />
+        </div>
     </div>
-</div>
-<button type="submit" id="BtnSaveSettings" class="btn btn-primary">Einstellungen speichern ...</button>
+    <button type="submit" id="BtnSaveSettings" class="btn btn-primary">Einstellungen speichern ...</button>
 </EditForm>
 <BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage" />
 <hr />
