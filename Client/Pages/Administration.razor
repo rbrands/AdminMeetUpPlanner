@@ -311,6 +311,16 @@
             <InputText id="sundayBadge" placeholder="Sonntag" class="form-control form-control-sm" @bind-Value="_clientSettings.SundayBadge" title="Badge für Sonntag" />
         </div>
     </div>
+    @if (_tenantSettings.TracksEnabled)
+    {
+        <div class="form-group">
+            <label for="quickTag">Routen-Tag für Schnellauswahl</label>
+            <InputText id="quickTag" aria-describedby="quickTagHelp" class="form-control" @bind-Value="_clientSettings.RouteTagForQuickSelection" placeholder="Tag für Schnellauswahl" title="Tag" />
+            <small id="quickTagHelp" class="form-text text-muted">
+                Tag, das für die Schnellauswahl von Routen verwendet werden soll (oder leer lassen, wenn nicht gewünscht)
+            </small>
+        </div>
+    }
     <button type="submit" id="BtnSaveSettings" class="btn btn-primary">Einstellungen speichern ...</button>
 </EditForm>
 <BlazorApp.Client.Shared.NotificationMessage @ref="@_notificationMessage" />
