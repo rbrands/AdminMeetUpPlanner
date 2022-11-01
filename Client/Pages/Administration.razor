@@ -345,6 +345,13 @@
         </small>
     </div>
     <div class="form-group">
+        <label for="webcalToken">Token für Internet-Kalender</label>
+        <InputText id="webcalToken" aria-describedby="webcalTokenHelp" class="form-control" @bind-Value="_serverSettings.WebcalToken" autocomplete="on" placeholder="Token für Internet-Kalender" title="Webcal Token" />
+        <small id="webcalTokenHelp" class="form-text text-muted">
+            Token für den Zugriff auf den Internet-Kalender der Form webcals://meetupplanner.de/api/webcalendar/getmeetups/token.
+        </small>
+    </div>
+    <div class="form-group">
         <label for="autoDelete">Anzahl Tage</label>
         <InputNumber id="autoDelete" aria-describedby="autoDeleteHelp" class="form-control" @bind-Value="_serverSettings.AutoDeleteAfterDays" autocomplete="on" placeholder="Speicherungsdauer in Tagen für Termine" title="Speicherdauer" />
         <small id="autoDeleteHelp" class="form-text text-muted">
