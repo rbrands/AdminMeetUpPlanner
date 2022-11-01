@@ -17,6 +17,9 @@ namespace BlazorApp.Shared
         [JsonProperty(PropertyName = "adminKeyword")]
         [Required(ErrorMessage = "Bitte ein Schlüsselwort für den Admin-Zugriff vergeben.")]
         public string AdminKeyword { get; set; } = "DemoAdmin";
+        [JsonProperty(PropertyName = "webcalToken")]
+        [Required(ErrorMessage = "Bitte ein Token für den Webcal-Zugriff vergeben.")]
+        public string WebcalToken { get; set; } = "9F27867461D";
         /// <summary>
         /// After given days meetups are deleted
         /// </summary>
