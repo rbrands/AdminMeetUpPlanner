@@ -58,6 +58,8 @@ namespace BlazorApp.Shared
         public string GuestDisclaimer { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RouteTagForQuickSelection {get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Federation { get; set; }
 
         public int GetMaxGroupSize(bool isAdmin)
         {
