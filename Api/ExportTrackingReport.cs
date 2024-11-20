@@ -1,18 +1,11 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using BlazorApp.Shared;
-using System.Web.Http;
 using Newtonsoft.Json;
-using System.Linq;
 using BlazorApp.Api.Repositories;
 using BlazorApp.Api.Utils;
+using Microsoft.Azure.Functions.Worker;
 
 namespace BlazorApp.Api
 {
@@ -41,7 +34,7 @@ namespace BlazorApp.Api
         /// <param name="req"></param>
         /// <param name="log"></param>
         /// <returns></returns>
-        [FunctionName("ExportTrackingReport")]
+        [Function("ExportTrackingReport")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ExportTrackingReport")] HttpRequest req)
         {
@@ -51,14 +44,14 @@ namespace BlazorApp.Api
             TenantSettings tenant = await _tenantRepository.GetItem(trackingRequest.TenantId);
             if (null == tenant)
             {
-                return new BadRequestErrorMessageResult($"Tenant with id {trackingRequest.TenantId} not found.");
+                return new BadRequestObjectResult($"Tenant with id {trackingRequest.TenantId} not found.");
             }
             ClientPrincipal user = UserDetails.GetClientPrincipal(req);
             _logger.LogInformation($"ExportTrackingReport for {tenant.TenantName} called from {user.UserDetails}");
             if (!user.IsInRole(tenant.AdminRole) && !user.IsInRole(Constants.ROLE_ADMIN))
             {
                 _logger.LogError($"User {user.UserDetails} not authorized for tenant {tenant.TenantName}");
-                return new BadRequestErrorMessageResult($"User not authorized for ExportTrackingReport.");
+                return new BadRequestObjectResult($"User not authorized for ExportTrackingReport.");
             }
             // Add caller to request
             trackingRequest.RequestorFirstName = user.IdentityProvider;
@@ -68,7 +61,7 @@ namespace BlazorApp.Api
             if (String.IsNullOrEmpty(trackingRequest.TrackFirstName) || String.IsNullOrEmpty(trackingRequest.TrackLastName))
             {
                 _logger.LogWarning("ExportTrackingReport called without name of person to track.");
-                return new BadRequestErrorMessageResult("Track name missing.");
+                return new BadRequestObjectResult("Track name missing.");
             }
             // Get a list of all CalendarItems
             IEnumerable<CalendarItem> rawListOfCalendarItems;

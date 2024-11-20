@@ -102,10 +102,7 @@ namespace BlazorApp.Shared
         {
             string[] weekdays = { "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa" };
             string dateString = String.Empty;
-            if (null != StartDate)
-            {
-                dateString = weekdays[(int)StartDate.DayOfWeek] + ", " + this.StartDate.ToString("dd.MM. HH:mm") + " Uhr";
-            }
+            dateString = weekdays[(int)StartDate.DayOfWeek] + ", " + this.StartDate.ToString("dd.MM. HH:mm") + " Uhr";
             return dateString;
         }
         /// <summary>
@@ -115,10 +112,7 @@ namespace BlazorApp.Shared
         public string GetPublishDateAsString()
         {
             string dateString = String.Empty;
-            if (null != PublishDate)
-            {
-                dateString = this.PublishDate.ToLocalTime().ToString("dd.MM. HH:mm") + " Uhr";
-            }
+            dateString = this.PublishDate.ToLocalTime().ToString("dd.MM. HH:mm") + " Uhr";
             return dateString;
         }
         [JsonIgnore]
