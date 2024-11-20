@@ -1,14 +1,8 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using BlazorApp.Shared;
 using BlazorApp.Api.Repositories;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Azure.Functions.Worker;
 
 namespace BlazorApp.Api
