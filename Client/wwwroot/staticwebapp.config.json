@@ -42,6 +42,6 @@
     "exclude": [ "/images/*.{png,jpg,gif}", "/css/*" ]
   },
   "platform": {
-    "apiRuntime": "dotnet:6.0"
+    "apiRuntime": "dotnet:8.0"
   }
 }
